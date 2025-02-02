@@ -1,25 +1,15 @@
 "use server"
 
-import { z } from "zod"
+import { ContactFormSchema, sendEmail } from "@/lib/email"
 
-const ContactFormSchema = z.object({
-  name: z.string().min(2, "Name must be at least 2 characters"),
-  email: z.string().email("Invalid email address"),
-  phone: z.string().optional(),
-  message: z.string().min(10, "Message must be at least 10 characters"),
-})
-
-type State = {
-  message?: string
-  error?: string
-}
-
-export async function submitContactForm(prevState: State, formData: FormData): Promise<State> {
+export async function submitContactForm(prevState: any, formData: FormData) {
   const validatedFields = ContactFormSchema.safeParse({
     name: formData.get("name"),
     email: formData.get("email"),
     phone: formData.get("phone"),
+    subject: formData.get("subject"),
     message: formData.get("message"),
+    service: formData.get("service"),
   })
 
   if (!validatedFields.success) {
@@ -28,12 +18,21 @@ export async function submitContactForm(prevState: State, formData: FormData): P
     }
   }
 
-  // Here you would typically send an email or save to a database
-  // For now, we'll just simulate a delay
-  await new Promise((resolve) => setTimeout(resolve, 1000))
+  try {
+    const result = await sendEmail(validatedFields.data)
 
-  return {
-    message: "Thank you for your message. We will get back to you soon!",
+    if (result.error) {
+      return { error: result.error }
+    }
+
+    return {
+      success: true,
+      message: "Thank you for your message. We will get back to you soon!",
+    }
+  } catch (error) {
+    return {
+      error: "Something went wrong. Please try again later.",
+    }
   }
 }
 
