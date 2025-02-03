@@ -2,19 +2,28 @@
 
 import { ContactFormSchema, sendEmail } from "@/lib/email"
 
-export async function submitContactForm(prevState: any, formData: FormData) {
-  const validatedFields = ContactFormSchema.safeParse({
+export type ContactFormState = {
+  error?: string
+  success?: boolean
+  message?: string
+}
+
+export async function submitContactForm(prevState: ContactFormState, formData: FormData): Promise<ContactFormState> {
+  const rawData = {
     name: formData.get("name"),
     email: formData.get("email"),
     phone: formData.get("phone"),
     subject: formData.get("subject"),
     message: formData.get("message"),
     service: formData.get("service"),
-  })
+  }
+
+  const validatedFields = ContactFormSchema.safeParse(rawData)
 
   if (!validatedFields.success) {
+    const errors = validatedFields.error.flatten()
     return {
-      error: "Invalid form data. Please check your inputs.",
+      error: Object.values(errors.fieldErrors).flat().join(", "),
     }
   }
 

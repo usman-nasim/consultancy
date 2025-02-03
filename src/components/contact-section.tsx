@@ -5,11 +5,15 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Mail, MapPin, Phone } from "lucide-react"
-import { submitContactForm } from "@/lib/actions"
+import { submitContactForm, type ContactFormState } from "@/app/actions"
 import { useFormState } from "react-dom"
 import { motion } from "framer-motion"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useState } from "react"
+import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form"
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { ContactFormSchema, type ContactFormType } from "@/lib/email"
 
 const services = [
   "Youth Development Programs",
@@ -20,7 +24,7 @@ const services = [
   "Research & Survey",
 ]
 
-const initialState = {
+const initialState: ContactFormState = {
   message: "",
   error: "",
 }
@@ -31,10 +35,29 @@ export default function ContactSection() {
   const [state, formAction] = useFormState(submitContactForm, initialState)
   const [isSubmitting, setIsSubmitting] = useState(false)
 
-  const handleSubmit = async (formData: FormData) => {
+  const form = useForm<ContactFormType>({
+    resolver: zodResolver(ContactFormSchema),
+    defaultValues: {
+      name: "",
+      email: "",
+      phone: "",
+      subject: "",
+      message: "",
+      service: undefined,
+    },
+  })
+
+  async function onSubmit(data: ContactFormType) {
     setIsSubmitting(true)
     try {
+      const formData = new FormData()
+      Object.entries(data).forEach(([key, value]) => {
+        if (value) formData.append(key, value)
+      })
       await formAction(formData)
+      if (!state?.error) {
+        form.reset()
+      }
     } finally {
       setIsSubmitting(false)
     }
@@ -100,30 +123,98 @@ export default function ContactSection() {
                 <CardDescription>We'll get back to you as soon as possible</CardDescription>
               </CardHeader>
               <CardContent>
-                <form action={handleSubmit} className="space-y-4">
-                  <Input name="name" placeholder="Your Name" required />
-                  <Input name="email" type="email" placeholder="Your Email" required />
-                  <Input name="phone" type="tel" placeholder="Phone Number (Optional)" />
-                  <Input name="subject" placeholder="Subject" required />
-                  <Select name="service">
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select a service (Optional)" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {services.map((service) => (
-                        <SelectItem key={service} value={service}>
-                          {service}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <Textarea name="message" placeholder="Your Message" required />
-                  <Button type="submit" className="w-full gradient-bg animate-gradient" disabled={isSubmitting}>
-                    {isSubmitting ? "Sending..." : "Send Message"}
-                  </Button>
-                  {state?.message && <p className="text-sm text-green-600 dark:text-green-400">{state.message}</p>}
-                  {state?.error && <p className="text-sm text-red-600 dark:text-red-400">{state.error}</p>}
-                </form>
+                <Form {...form}>
+                  <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                    <FormField
+                      control={form.control}
+                      name="name"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormControl>
+                            <Input placeholder="Your Name" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="email"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormControl>
+                            <Input type="email" placeholder="Your Email" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="phone"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormControl>
+                            <Input type="tel" placeholder="Phone Number (Optional)" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="subject"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormControl>
+                            <Input placeholder="Subject" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="service"
+                      render={({ field }) => (
+                        <FormItem>
+                          <Select onValueChange={field.onChange} defaultValue={field.value}>
+                            <FormControl>
+                              <SelectTrigger>
+                                <SelectValue placeholder="Select a service (Optional)" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              {services.map((service) => (
+                                <SelectItem key={service} value={service}>
+                                  {service}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="message"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormControl>
+                            <Textarea placeholder="Your Message" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <Button type="submit" className="w-full gradient-bg animate-gradient" disabled={isSubmitting}>
+                      {isSubmitting ? "Sending..." : "Send Message"}
+                    </Button>
+                    {state?.message && <p className="text-sm text-green-600 dark:text-green-400">{state.message}</p>}
+                    {state?.error && <p className="text-sm text-red-600 dark:text-red-400">{state.error}</p>}
+                  </form>
+                </Form>
               </CardContent>
             </Card>
           </MotionDiv>

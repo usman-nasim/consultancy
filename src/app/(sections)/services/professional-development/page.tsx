@@ -70,7 +70,7 @@ export default function ProfessionalDevelopmentPage() {
 
         <div className="space-y-6">
           <Image
-            src="/placeholder.svg"
+            src="/youth-development.jpg"
             alt="Professional Development"
             width={400}
             height={600}

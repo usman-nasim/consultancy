@@ -15,7 +15,7 @@ export default function AuditingPage() {
       <div className="relative h-[40vh] min-h-[400px] w-full overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-primary/90 to-primary/40" />
         <Image
-          src="/placeholder.svg"
+          src="/youth-development.jpg"
           alt="Auditing Services"
           fill
           className="object-cover"
@@ -66,7 +66,7 @@ export default function AuditingPage() {
             </div>
             <div className="flex-1">
               <Image
-                src="/placeholder.svg"
+                src="/youth-development.jpg"
                 alt="Financial Audits"
                 width={500}
                 height={300}
@@ -79,7 +79,7 @@ export default function AuditingPage() {
           <div className="flex flex-col gap-8 md:flex-row md:items-center">
             <div className="flex-1">
               <Image
-                src="/placeholder.svg"
+                src="/youth-development.jpg"
                 alt="Tax Consulting"
                 width={500}
                 height={300}

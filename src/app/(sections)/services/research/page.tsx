@@ -39,7 +39,7 @@ export default function ResearchPage() {
             </div>
           </div>
           <div className="relative aspect-square lg:aspect-auto">
-            <Image src="/placeholder.svg" alt="Research Services" fill className="rounded-lg object-cover" />
+            <Image src="/youth-development.jpg" alt="Research Services" fill className="rounded-lg object-cover" />
           </div>
         </div>
       </section>

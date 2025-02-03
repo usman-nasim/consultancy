@@ -78,7 +78,7 @@ export default function YouthDevelopmentPage() {
 
         <div className="space-y-6">
           <Image
-            src="/placeholder.svg"
+            src="/youth-development.jpg"
             alt="Youth Development"
             width={400}
             height={600}

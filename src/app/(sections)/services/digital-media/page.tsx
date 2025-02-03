@@ -111,7 +111,7 @@ export default function DigitalMediaPage() {
                 </ul>
               </div>
               <div className="relative aspect-square">
-                <Image src="/placeholder.svg" alt="Digital Marketing" fill className="rounded-lg object-cover" />
+                <Image src="/youth-development.jpg" alt="Digital Marketing" fill className="rounded-lg object-cover" />
               </div>
             </div>
             <div className="absolute inset-0 bg-[linear-gradient(to_right,transparent,primary)] backdrop-blur-3xl" />
