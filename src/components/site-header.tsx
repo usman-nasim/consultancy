@@ -1,24 +1,30 @@
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { Lightbulb } from 'lucide-react'
+import { Lightbulb } from "lucide-react"
 
 export default function SiteHeader() {
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-16 items-center space-x-4 sm:justify-between sm:space-x-0">
-        <Link href="/" className="flex items-center space-x-2">
-          <Lightbulb className="h-6 w-6" />
-          <span className="inline-block font-bold">Burhan Master Minds</span>
+      <div className="container flex h-20 items-center justify-between">
+        <Link href="/" className="flex items-center space-x-3 transition-colors hover:text-primary">
+          <Lightbulb className="h-7 w-7 text-primary" />
+          <span className="text-xl font-bold tracking-tight">Burhan Master Minds</span>
         </Link>
-        <div className="flex flex-1 items-center justify-end space-x-4">
-          <nav className="flex items-center space-x-2">
-            <Link href="/services" className="hidden sm:inline-block">
+        <div className="flex items-center">
+          <nav className="flex items-center space-x-6">
+            <Link
+              href="/services"
+              className="hidden text-sm font-medium transition-colors hover:text-primary sm:inline-block"
+            >
               Services
             </Link>
-            <Link href="/about" className="hidden sm:inline-block">
+            <Link
+              href="/"
+              className="hidden text-sm font-medium transition-colors hover:text-primary sm:inline-block"
+            >
               About
             </Link>
-            <Button asChild>
+            <Button asChild size="sm" className="gradient-bg animate-gradient text-white font-medium">
               <Link href="/contact">Contact Us</Link>
             </Button>
           </nav>
@@ -27,3 +33,4 @@ export default function SiteHeader() {
     </header>
   )
 }
+
