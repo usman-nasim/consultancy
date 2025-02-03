@@ -45,7 +45,7 @@ export default function DigitalMediaPage() {
                     { icon: Globe, label: "Web Development" },
                     { icon: BarChart, label: "Analytics" },
                     { icon: PenTool, label: "Content Creation" },
-                  ].map((item, index) => (
+                  ].map((item) => (
                     <div
                       key={item.label}
                       className="flex flex-col items-center justify-center rounded-lg border bg-background p-4 text-center transition-colors hover:bg-primary hover:text-primary-foreground"
